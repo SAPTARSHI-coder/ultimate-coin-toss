@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://ultimate-coin-toss.netlify.app/">ultimate-coin-toss.netlify.app</a>
+  <a href="https://ultimate-coin-toss.netlify.app/">Live Demo | Play the Game</a>
 </p>
 
 ---
