@@ -1,5 +1,7 @@
 # Ultimate Coin Toss
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-ultimate--coin--toss.netlify.app-brightgreen?style=for-the-badge&logo=netlify)](https://ultimate-coin-toss.netlify.app/)
+
 A high-fidelity, interactive browser-based coin toss simulation engineered using core web technologies (HTML, CSS, JavaScript). The interface features a modern aesthetic utilizing glassmorphism, dynamic 3D CSS transform keyframes for realistic coin flipping physics, real-time match state management, and a procedural particle system rendering via the HTML5 Canvas API.
 
 ## System Architecture Overview
