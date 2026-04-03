@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Coin Toss</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap');
+
+        :root {
+            --bg-dark: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-highlight: rgba(255, 255, 255, 0.2);
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary-glow: rgba(168, 85, 247, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --coin-size: 220px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, hsla(253,16%,15%,1) 0, transparent 40%), 
+                radial-gradient(circle at 90% 80%, hsla(225,39%,20%,1) 0, transparent 40%),
+                radial-gradient(circle at 50% 50%, hsla(0,0%,0%,0) 0, transparent 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            perspective: 1200px;
+            position: relative;
+        }
+
+        #fireworks {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+
+        .game-container {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-highlight);
+            border-radius: 32px;
+            padding: 2.5rem 2rem;
+            width: 90%;
+            max-width: 460px;
+            box-shadow: 
+                0 30px 60px -10px rgba(0, 0, 0, 0.6),
+                inset 0 0 20px rgba(255, 255, 255, 0.03);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #e2e8f0, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .round-info {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            min-height: 1.2rem;
+        }
+
+        /* Mode Selection */
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: rgba(0,0,0,0.2);
+            padding: 0.4rem;
+            border-radius: 12px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mode-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: auto;
+        }
+
+        .mode-btn.active {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-main);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .mode-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Coin Stage */
+        .coin-stage {
+            perspective: 1000px;
+            width: var(--coin-size);
+            height: var(--coin-size);
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .coin {
+            width: 100%; height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            border-radius: 50%;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .coin.flipping {
+            box-shadow: 0 0 50px var(--primary-glow), 0 0 100px var(--secondary-glow);
+        }
+
+        .side {
+            position: absolute;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            image-rendering: -webkit-optimize-contrast;
+            background-repeat: no-repeat;
+            object-fit: contain;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        .heads {
+            background-image: url('coin.jpeg');
+            background-size: 200% 100%; 
+            background-position: 0% 0%;
+            transform: rotateY(0deg);
+        }
+
+        .tails {
+            background-image: url('coin.jpeg');
+            background-size: 200% 100%;
+            background-position: 100% 0%;
+            transform: rotateY(180deg);
+        }
+
+        .side::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4); 
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 60%);
+            z-index: 2;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 1.8rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            min-width: 100px;
+            transition: transform 0.3s, background 0.3s;
+        }
+        
+        .stat-box.updated { background: rgba(255,255,255,0.1); transform: scale(1.05); }
+
+        .stat-label {
+            display: block; font-size: 0.75rem; color: var(--text-muted);
+            margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 1.75rem; font-weight: 700;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* Main Controls */
+        .controls {
+            display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;
+        }
+
+        button.action-btn {
+            position: relative;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 1rem 0; width: 130px;
+            border-radius: 16px;
+            color: var(--text-main); font-size: 1rem; font-weight: 600;
+            cursor: pointer; overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            letter-spacing: 0.5px; font-family: inherit;
+        }
+
+        button.action-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        button.action-btn:hover:not(:disabled) {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
+        }
+        button.action-btn:hover:not(:disabled)::before { left: 100%; }
+        button.action-btn:active:not(:disabled) { transform: translateY(-1px) scale(0.98); }
+        button.action-btn:disabled { opacity: 0.4; cursor: default; transform: scale(0.95); }
+
+        /* Secondary Controls (Auto/Reset) */
+        .sub-controls {
+            display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;
+        }
+
+        .sub-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: auto;
+        }
+
+        .sub-btn:hover:not(:disabled) { background: rgba(255,255,255,0.05); color: var(--text-main); }
+        .sub-btn.active { background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.4); color: white; }
+
+        /* Status Messages */
+        #message {
+            min-height: 24px; font-size: 1.1rem; font-weight: 500;
+            letter-spacing: 0.5px; transition: all 0.5s ease; opacity: 0.9;
+        }
+        
+        #match-point {
+            height: 20px; font-size: 0.85rem; font-weight: 700;
+            color: #f59e0b; text-transform: uppercase; letter-spacing: 2px;
+            opacity: 0; transition: opacity 0.3s; margin-top: 0.5rem;
+        }
+        
+        #match-point.visible { opacity: 1; animation: pulseWarn 1s infinite; }
+
+        @keyframes pulseWarn { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .win { color: #4ade80; text-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
+        .lose { color: #f87171; text-shadow: 0 0 10px rgba(248, 113, 113, 0.3); }
+        .final-win { color: #facc15; font-size: 1.3rem; text-shadow: 0 0 20px rgba(250, 204, 21, 0.4); }
+
+    </style>
+</head>
+<body>
+    <canvas id="fireworks"></canvas>
+
+    <main class="game-container" id="game-card">
+        <h1>Ultimate Coin Toss</h1>
+        <div class="round-info" id="round-display">Select Round Mode</div>
+
+        <!-- Mode Select -->
+        <div class="mode-selector">
+            <button class="mode-btn" onclick="game.setMode(3)">Best of 3</button>
+            <button class="mode-btn" onclick="game.setMode(5)">Best of 5</button>
+            <button class="mode-btn" onclick="game.setMode(7)">Best of 7</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-box" id="box-wins">
+                <span class="stat-label">Player</span>
+                <span class="stat-value" id="wins">0</span>
+            </div>
+            <div class="stat-box" id="box-losses">
+                <span class="stat-label">Computer</span>
+                <span class="stat-value" id="losses">0</span>
+            </div>
+        </div>
+
+        <!-- Coin -->
+        <div class="coin-stage">
+            <div class="coin" id="coin">
+                <div class="side heads"></div>
+                <div class="side tails"></div>
+            </div>
+        </div>
+
+        <!-- Main Buttons -->
+        <div class="controls">
+            <button class="action-btn" id="btn-heads" onclick="game.playTurn('heads')">HEADS</button>
+            <button class="action-btn" id="btn-tails" onclick="game.playTurn('tails')">TAILS</button>
+        </div>
+
+        <!-- Sub Controls -->
+        <div class="sub-controls">
+            <button class="sub-btn" id="btn-auto" onclick="game.toggleAuto()">Auto Toss</button>
+            <button class="sub-btn" id="btn-reset" onclick="game.reset()">Reset Game</button>
+        </div>
+
+        <p id="message">Select Mode to Start</p>
+        <div id="match-point">Match Point!</div>
+    </main>
+
+    <script>
+        // --- Game Logic Module ---
+        const game = (() => {
+            const state = {
+                wins: 0,
+                losses: 0,
+                mode: null,          // 3, 5, 7
+                targetWins: 0,       // ceil(mode/2)
+                round: 0,
+                isFlipping: false,
+                isAuto: false,
+                gameOver: false,
+                timer: null
+            };
+
+            const el = {
+                coin: document.getElementById('coin'),
+                msg: document.getElementById('message'),
+                wins: document.getElementById('wins'),
+                losses: document.getElementById('losses'),
+                boxWins: document.getElementById('box-wins'),
+                boxLosses: document.getElementById('box-losses'),
+                btns: [document.getElementById('btn-heads'), document.getElementById('btn-tails')],
+                round: document.getElementById('round-display'),
+                matchPoint: document.getElementById('match-point'),
+                modeBtns: document.querySelectorAll('.mode-btn'),
+                btnAuto: document.getElementById('btn-auto')
+            };
+
+            // Dynamic Styles
+            const styleSheet = document.createElement("style");
+            document.head.appendChild(styleSheet);
+
+            function init() {
+                // Default mode selection
+                setMode(3); 
+            }
+
+            function setMode(n) {
+                if (state.round > 0 || state.gameOver) return; // Locked if started
+                
+                state.mode = n;
+                state.targetWins = Math.ceil(n / 2);
+                updateUI();
+                el.msg.textContent = `Best of ${n} selected. Start!`;
+                el.msg.className = "";
+            }
+
+            function toggleAuto() {
+                if (state.gameOver) return;
+                
+                state.isAuto = !state.isAuto;
+                
+                if (state.isAuto) {
+                    el.btnAuto.classList.add('active');
+                    el.btnAuto.textContent = "Stop Auto";
+                    runAutoLoop();
+                } else {
+                    stopAuto();
+                }
+            }
+
+            function stopAuto() {
+                state.isAuto = false;
+                el.btnAuto.classList.remove('active');
+                el.btnAuto.textContent = "Auto Toss";
+                clearTimeout(state.timer);
+            }
+
+            function runAutoLoop() {
+                if (!state.isAuto || state.gameOver) return;
+                
+                // If flipping, wait.
+                if (state.isFlipping) {
+                    state.timer = setTimeout(runAutoLoop, 500);
+                    return;
+                }
+
+                // Pick random
+                const choice = Math.random() < 0.5 ? 'heads' : 'tails';
+                playTurn(choice);
+
+                // Next turn delay handled in finishTurn
+            }
+
+            function playTurn(userChoice) {
+                if (state.isFlipping || state.gameOver) return;
+                
+                // Start Round
+                state.isFlipping = true;
+                state.round++;
+                
+                // UI Locks
+                el.btns.forEach(b => b.disabled = true);
+                el.modeBtns.forEach(b => b.disabled = true); // Lock mode
+                
+                // Message
+                el.msg.textContent = state.isAuto ? `Auto: Selected ${userChoice.toUpperCase()}...` : "Flipping...";
+                el.msg.className = "flipping-text";
+                el.coin.classList.add('flipping');
+                el.matchPoint.classList.remove('visible');
+
+                // Visual Reset
+                el.coin.style.animation = 'none';
+                void el.coin.offsetWidth;
+
+                // Logic
+                const isHeads = Math.random() < 0.5;
+                const result = isHeads ? 'heads' : 'tails';
+                
+                // Animation Math
+                const baseSpins = 4 + Math.floor(Math.random() * 3);
+                const totalDeg = (baseSpins * 360) + (isHeads ? 0 : 180);
+                
+                const animName = `flip-${Date.now()}`;
+                styleSheet.textContent = `
+                    @keyframes ${animName} {
+                        0% { transform: rotateY(0) scale(1); }
+                        10% { transform: rotateY(30deg) scale(1.15); }
+                        85% { transform: rotateY(${totalDeg - 20}deg) scale(1.15); }
+                        95% { transform: rotateY(${totalDeg}deg) scale(0.98); }
+                        100% { transform: rotateY(${totalDeg}deg) scale(1); }
+                    }
+                `;
+
+                el.coin.style.animation = `${animName} 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`;
+
+                setTimeout(() => {
+                    finishTurn(userChoice, result);
+                }, 1500);
+            }
+
+            function finishTurn(userChoice, outcome) {
+                state.isFlipping = false;
+                el.coin.classList.remove('flipping');
+
+                const won = (userChoice === outcome);
+                
+                if (won) {
+                    state.wins++;
+                    el.wins.textContent = state.wins;
+                    pulseElement(el.boxWins);
+                    el.msg.textContent = `${outcome.toUpperCase()}! Point Player.`;
+                    el.msg.className = "win";
+                } else {
+                    state.losses++;
+                    el.losses.textContent = state.losses;
+                    pulseElement(el.boxLosses);
+                    el.msg.textContent = `${outcome.toUpperCase()}! Point Computer.`;
+                    el.msg.className = "lose";
+                }
+
+                // Check Match Logic
+                checkMatchStatus();
+
+                // Re-enable input if game continues
+                if (!state.gameOver) {
+                    if (!state.isAuto) {
+                        el.btns.forEach(b => b.disabled = false);
+                    } else {
+                        // Continue Auto Loop
+                        state.timer = setTimeout(runAutoLoop, 1500); 
+                    }
+                }
+                updateUI();
+            }
+
+            function checkMatchStatus() {
+                if (state.wins >= state.targetWins) {
+                    endGame(true);
+                } else if (state.losses >= state.targetWins) {
+                    endGame(false);
+                } else {
+                    // Check Match Point
+                    if (state.wins === state.targetWins - 1 || state.losses === state.targetWins - 1) {
+                         el.matchPoint.textContent = "Match Point!";
+                         el.matchPoint.classList.add('visible');
+                    }
+                }
+            }
+
+            function endGame(playerWon) {
+                state.gameOver = true;
+                stopAuto();
+                
+                el.msg.textContent = playerWon ? "MATCH WON! YOU ARE THE BEST PLAYER!" : "MATCH LOST! COMPUTER WINS.";
+                el.msg.className = playerWon ? "final-win" : "lose"; // Can add stronger effect
+                
+                // Disable all controls
+                el.btns.forEach(b => b.disabled = true);
+                
+                if (playerWon) launchFireworks();
+            }
+
+            function reset() {
+                state.wins = 0;
+                state.losses = 0;
+                state.round = 0;
+                state.gameOver = false;
+                state.isFlipping = false;
+                stopAuto();
+                
+                // Reset UI
+                el.wins.textContent = "0";
+                el.losses.textContent = "0";
+                el.msg.textContent = "Game Reset. Select Mode.";
+                el.msg.className = "";
+                el.matchPoint.classList.remove('visible');
+                el.btns.forEach(b => b.disabled = false);
+                el.modeBtns.forEach(b => b.disabled = false);
+                
+                // Reset coin rotation visual
+                el.coin.style.animation = 'none';
+                void el.coin.offsetWidth;
+                
+                // Reselect default? Or keep current mode
+                updateUI();
+            }
+
+            function updateUI() {
+                // Mode Buttons Active State
+                el.modeBtns.forEach(btn => {
+                    btn.classList.toggle('active', parseInt(btn.textContent.match(/\d+/)[0]) === state.mode);
+                });
+                
+                el.round.innerHTML = state.round > 0 ? `Round ${state.round}` : "New Match";
+            }
+
+            function pulseElement(element) {
+                element.classList.remove('updated');
+                void element.offsetWidth; 
+                element.classList.add('updated');
+                setTimeout(() => element.classList.remove('updated'), 300);
+            }
+
+            return { setMode, playTurn, toggleAuto, reset, init };
+        })();
+
+        // --- Fireworks Logic ---
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId;
+
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.alpha = 1; this.decay = Math.random() * 0.02 + 0.015;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy; this.vy += 0.05; this.alpha -= this.decay;
+            }
+            draw() {
+                ctx.save(); ctx.globalAlpha = this.alpha;
+                ctx.beginPath(); ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.fill(); ctx.restore();
+            }
+        }
+
+        function createFirework(x, y) {
+            const colors = ['#f43f5e', '#ec4899', '#d946ef', '#a855f7', '#8b5cf6', '#6366f1', '#fbbf24'];
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+            }
+        }
+
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => { p.update(); p.draw(); if (p.alpha <= 0) particles.splice(i, 1); });
+            if (particles.length > 0) animationId = requestAnimationFrame(animateFireworks);
+            else cancelAnimationFrame(animationId);
+        }
+
+        function launchFireworks() {
+            createFirework(window.innerWidth * 0.3, window.innerHeight * 0.4);
+            setTimeout(() => createFirework(window.innerWidth * 0.7, window.innerHeight * 0.3), 200);
+            setTimeout(() => createFirework(window.innerWidth * 0.5, window.innerHeight * 0.5), 400);
+            cancelAnimationFrame(animationId);
+            animateFireworks();
+        }
+
+        // Start
+        game.init();
+
+    </script>
+</body>
+</html>
