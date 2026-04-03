@@ -33,7 +33,7 @@
 - Multiple match modes (Best-of-3, Best-of-5, Best-of-7)
 - Celebration particle effects on match victory
 - Smooth procedural 3D flip animations
-- Responsive, glassmorphism UI
+- Fully responsive across mobile, tablet, and desktop (480px & 360px breakpoints)
 
 ---
 
