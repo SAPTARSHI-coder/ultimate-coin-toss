@@ -38,3 +38,7 @@ The application is deployed as a static file architecture with zero external bui
 - **State Encapsulation:** Implements a JavaScript Module Pattern (`const game = (() => {})()`) to prohibit global scope pollution and ensure state integrity.
 - **Procedural Particle Generation:** Uses the HTML5 Canvas API context for rendering stochastic, velocity-based particle trajectories unconstrained by DOM node limitations.
 - **Dynamic CSS Injection:** Mutates `styleSheet.textContent` dynamically bypassing static CSS constraints to ensure unique initial-to-terminal rotation vectors per flip task.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
