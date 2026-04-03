@@ -1,24 +1,39 @@
 <h1 align="center">Ultimate Coin Toss</h1>
 
 <p align="center">
-  <img src="assets/ss.png" alt="Ultimate Coin Toss — App Preview" width="720"/>
+  A physics-driven coin toss simulator with real-time state and cinematic animations
 </p>
 
 <p align="center">
-  <a href="https://ultimate-coin-toss.netlify.app/">🔗 ultimate-coin-toss.netlify.app</a>
-</p>
-
-<p align="center">
-  A high-fidelity, interactive browser-based coin toss simulation engineered with pure HTML, CSS, and JavaScript — featuring glassmorphism UI, procedural 3D flip physics, real-time score state management, and a canvas-rendered particle system.
+  <a href="https://ultimate-coin-toss.netlify.app/">ultimate-coin-toss.netlify.app</a>
 </p>
 
 ---
 
-## Gameplay Preview
+## App Preview
 
 <p align="center">
-  <img src="assets/gif.gif" alt="Live Gameplay Demo" width="600"/>
+  <img src="assets/ss.png" alt="Ultimate Coin Toss — App Preview" width="720"/>
 </p>
+
+---
+
+## Live Demo
+
+<p align="center">
+  <img src="assets/gif.gif" alt="Live Gameplay Demo" width="700"/>
+</p>
+
+---
+
+## Features
+
+- Interactive coin toss gameplay
+- Player vs CPU simulation
+- Multiple match modes (Best-of-3, Best-of-5, Best-of-7)
+- Celebration particle effects on match victory
+- Smooth procedural 3D flip animations
+- Responsive, glassmorphism UI
 
 ---
 
