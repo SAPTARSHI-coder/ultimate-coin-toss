@@ -1,46 +1,81 @@
-# Ultimate Coin Toss
+<h1 align="center">Ultimate Coin Toss</h1>
 
-> 🔗 **Live Demo →** [ultimate-coin-toss.netlify.app](https://ultimate-coin-toss.netlify.app/)
+<p align="center">
+  <img src="assets/ss.png" alt="Ultimate Coin Toss — App Preview" width="720"/>
+</p>
 
-A high-fidelity, interactive browser-based coin toss simulation engineered using core web technologies (HTML, CSS, JavaScript). The interface features a modern aesthetic utilizing glassmorphism, dynamic 3D CSS transform keyframes for realistic coin flipping physics, real-time match state management, and a procedural particle system rendering via the HTML5 Canvas API.
+<p align="center">
+  <a href="https://ultimate-coin-toss.netlify.app/">🔗 ultimate-coin-toss.netlify.app</a>
+</p>
+
+<p align="center">
+  A high-fidelity, interactive browser-based coin toss simulation engineered with pure HTML, CSS, and JavaScript — featuring glassmorphism UI, procedural 3D flip physics, real-time score state management, and a canvas-rendered particle system.
+</p>
+
+---
+
+## Gameplay Preview
+
+<p align="center">
+  <img src="assets/gif.gif" alt="Live Gameplay Demo" width="600"/>
+</p>
+
+---
 
 ## System Architecture Overview
 
-The system provides competitive match configurations (Best-of-3, Best-of-5, Best-of-7). In each trial, user inputs are validated against randomized outcomes. The application manages score state dynamically and triggers visual feedback mechanisms upon state changes (e.g., match point reached, victory achieved). Additionally, an autonomous execution loop provides simulated match playback.
+The system provides competitive match configurations (Best-of-3, Best-of-5, Best-of-7). In each trial, user inputs are validated against randomized outcomes. The application manages score state dynamically and triggers visual feedback mechanisms upon state changes (e.g., match point reached, victory achieved). An autonomous execution loop provides simulated match playback.
+
+---
 
 ## Key Capabilities
 
-- **Stochastic 3D Animation:** Procedurally generated CSS keyframes calculate trajectory and spin velocity dynamically per interaction cycle.
-- **State Controller:** Real-time multi-variable state tracking encompassing user performance vs. CPU.
-- **Match Point Telemetry:** Predictive visual indicators when a conclusive victory is imminent.
-- **Canvas Particle Renderer:** Hardware-accelerated fireworks effect deployed upon match resolution.
-- **Autonomous Playback:** Configurable automated trial execution loops for simulation.
-- **Modern UI Patterns:** Implements translucent frosted-glass aesthetic patterns utilizing backdrop blur filters.
+| Capability | Description |
+| :--- | :--- |
+| **Stochastic 3D Animation** | Procedurally generated CSS keyframes calculate trajectory and spin velocity dynamically per interaction cycle. |
+| **State Controller** | Real-time multi-variable state tracking encompassing user performance vs. CPU. |
+| **Match Point Telemetry** | Predictive visual indicators when a conclusive victory is imminent. |
+| **Canvas Particle Renderer** | Hardware-accelerated fireworks effect deployed upon match resolution. |
+| **Autonomous Playback** | Configurable automated trial execution loops for simulation. |
+| **Modern UI Patterns** | Translucent frosted-glass aesthetic utilizing `backdrop-filter: blur`. |
+
+---
 
 ## Technology Stack
 
 | Technology | Implementation Role |
 | :--- | :--- |
-| **HTML5** | Semantic Document Object Model structure and Canvas integration. |
+| **HTML5** | Semantic DOM structure and Canvas API integration. |
 | **CSS3** | Hardware-accelerated 3D transforms (`preserve-3d`, `backface-visibility`), modular UI design, and dynamic CSSOM mutations. |
-| **Vanilla JS** | Application logic encapsulated within an IIFE-based Module Pattern, utilizing requestAnimationFrame and Canvas API rendering. |
-| **Typography** | Integration with Google Fonts (Outfit). |
+| **Vanilla JS** | Application logic encapsulated within an IIFE-based Module Pattern, utilizing `requestAnimationFrame` and Canvas rendering. |
+| **Typography** | Google Fonts — *Outfit*. |
 
-## Environment Setup
-
-The application is deployed as a static file architecture with zero external build dependencies.
-
-1. Clone or download the repository.
-2. Execute `index.html` within any modern, standard-compliant automated web browser.
+---
 
 ## Technical Implementation Details
 
-- **3D Spatial Rendering:** Employs CSS `perspective` interacting with `rotateY()` to construct 3D space depth during transform animations.
-- **Visual Isolation:** Uses `backface-visibility: hidden` to properly render bipartite textural topologies (obverse/reverse interfaces of the coin unit).
-- **State Encapsulation:** Implements a JavaScript Module Pattern (`const game = (() => {})()`) to prohibit global scope pollution and ensure state integrity.
-- **Procedural Particle Generation:** Uses the HTML5 Canvas API context for rendering stochastic, velocity-based particle trajectories unconstrained by DOM node limitations.
-- **Dynamic CSS Injection:** Mutates `styleSheet.textContent` dynamically bypassing static CSS constraints to ensure unique initial-to-terminal rotation vectors per flip task.
+- **3D Spatial Rendering:** Employs CSS `perspective` interacting with `rotateY()` to construct 3D depth during flip animations.
+- **Visual Isolation:** Uses `backface-visibility: hidden` to properly render obverse/reverse coin faces.
+- **State Encapsulation:** Implements a JavaScript Module Pattern (`const game = (() => {})()`) to prohibit global scope pollution.
+- **Procedural Particle Generation:** HTML5 Canvas API renders stochastic, velocity-based particle trajectories unconstrained by DOM node limits.
+- **Dynamic CSS Injection:** Mutates `styleSheet.textContent` at runtime to generate unique rotation vectors per flip.
+
+---
+
+## Environment Setup
+
+Zero external build dependencies — runs directly in the browser.
+
+```bash
+# Clone the repository
+git clone https://github.com/SAPTARSHI-coder/ultimate-coin-toss.git
+
+# Open in browser
+open index.html
+```
+
+---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
